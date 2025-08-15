@@ -83,10 +83,11 @@ function Profile() {
       </div>
 
       {/* Applied Jobs */}
-      <div className="max-w-4xl mx-auto bg-white rounded-2xl p-4 md:p-6">
-        <h1 className="font-bold text-lg mb-4">Applied Jobs</h1>
-        <AppliedJobTable />
-      </div>
+      { user && user.role ==='student' &&(<div className="max-w-4xl mx-auto bg-white rounded-2xl p-4 md:p-6">
+          <h1 className="font-bold text-lg mb-4">Applied Jobs</h1>
+          <AppliedJobTable />
+        </div>)
+      }
 
       <UpdateProfileDialog open={open} setOpen={setOpen} />
     </div>

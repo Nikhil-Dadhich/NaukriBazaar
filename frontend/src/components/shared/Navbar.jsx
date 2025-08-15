@@ -115,7 +115,7 @@ function Navbar() {
                 </div>
                 <div className="flex flex-col gap-3 mt-4 text-gray-600">
                   {
-                    user && user.role ==='student' && (
+                    user  && (
                       <div className="flex items-center gap-2">
                         <User />
                         <Link to="/profile">
