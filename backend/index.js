@@ -5,6 +5,7 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import userRoute from './routes/user.routes.js';
+import companyRoute from './routes/company.route.js';
 
 const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI;
@@ -23,6 +24,7 @@ app.use(cors(corsOptions));
 
 // api's
 app.use('/api/v1/user', userRoute);
+app.use('/api/v1/company', companyRoute);
 
 mongoose
 .connect(MONGO_URI)
