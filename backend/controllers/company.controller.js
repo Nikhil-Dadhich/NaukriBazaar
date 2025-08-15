@@ -1,4 +1,6 @@
-import {Company} from "../models/company.model.js";
+import { Company } from "../models/company.model.js";
+import { Job } from "../models/job.model.js";
+import { Application } from "../models/application.model.js";
 import cloudinary from "../utils/cloudinary.js";
 import getDataUri from "../utils/datauri.js";
 export const registerCompany = async (req, res) => {
@@ -102,6 +104,38 @@ export const updateCompany = async (req, res) => {
       message: "Company information updated.",
       success: true,
       company,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};
+
+export const deleteCompany = async (req, res) => {
+  try {
+    const companyId = req.params.id;
+    const company = await Company.findById(companyId);
+    if (!company) {
+      return res.status(404).json({
+        message: "Company not found.",
+        success: false,
+      });
+    }
+    // find and delete all jobs associated with the company
+    const jobs = await Job.find({ company: companyId });
+    await Promise.all(
+      jobs.map(async (job) => {
+        await Application.deleteMany({ job: job._id });
+      })
+    );
+    await Job.deleteMany({ company: companyId });
+    await Company.findByIdAndDelete(companyId);
+    return res.status(200).json({
+      message: "Company and associated jobs deleted successfully.",
+      success: true,
     });
   } catch (error) {
     console.log(error);

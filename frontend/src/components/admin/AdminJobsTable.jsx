@@ -8,20 +8,38 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import { Avatar, AvatarImage } from "../ui/avatar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@radix-ui/react-popover";
-import { Edit2, Eye, MoreHorizontal } from "lucide-react";
-import { useSelector } from "react-redux";
+import { Eye, MoreHorizontal, Trash2 } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { JOB_API_ENDPOINT } from "@/utils/constant";
+import { toast } from "sonner";
+import { setAllAdminJobs } from "@/redux/jobSlice";
 
 function AdminJobsTable() {
   const { allAdminJobs, searchJobByText } = useSelector((store) => store.job);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [filterJobs, setFilterJobs] = useState(allAdminJobs);
+
+  const deleteJobHandler = async (id) => {
+    try {
+      const res = await axios.delete(`${JOB_API_ENDPOINT}/delete/${id}`, { withCredentials: true });
+      if (res.data.success) {
+        const updatedJobs = allAdminJobs.filter((job) => job._id !== id);
+        dispatch(setAllAdminJobs(updatedJobs));
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  }
+
   useEffect(() => {
     const isSubsequence = (text, target) => {
       let i = 0,j = 0;
@@ -64,7 +82,7 @@ function AdminJobsTable() {
         </TableHeader>
         <TableBody>
           {filterJobs?.map((job) => (
-            <tr>
+            <TableRow key={job._id}>
               <TableCell>{job?.company?.name}</TableCell>
               <TableCell>{job?.title}</TableCell>
               <TableCell>{job?.createdAt.split("T")[0]}</TableCell>
@@ -75,25 +93,22 @@ function AdminJobsTable() {
                   </PopoverTrigger>
                   <PopoverContent className="w-32">
                     <div
-                      onClick={() => navigate(`/admin/companies/${job._id}`)}
-                      className="flex items-center gap-2 w-fit cursor-pointer"
-                    >
-                      <Edit2 className="w-4" />
-                      <span>Edit</span>
-                    </div>
-                    <div
                       onClick={() =>
                         navigate(`/admin/jobs/${job._id}/applicants`)
                       }
-                      className="flex items-center w-fit gap-2 cursor-pointer mt-2"
+                      className="flex items-center w-fit gap-2 cursor-pointer"
                     >
                       <Eye className="w-4" />
                       <span>Applicants</span>
                     </div>
+                    <div onClick={() => deleteJobHandler(job._id)} className='flex items-center gap-2 w-fit cursor-pointer mt-2'>
+                        <Trash2 className='w-4'/>
+                        <span>Delete</span>
+                    </div>
                   </PopoverContent>
                 </Popover>
               </TableCell>
-            </tr>
+            </TableRow>
           ))}
         </TableBody>
       </Table>

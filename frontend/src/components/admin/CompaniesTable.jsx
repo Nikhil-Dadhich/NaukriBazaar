@@ -2,14 +2,33 @@ import React, { useEffect, useState } from 'react'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
 import { Avatar, AvatarImage } from '../ui/avatar'
 import { Popover, PopoverContent, PopoverTrigger } from '@radix-ui/react-popover'
-import { Edit2, MoreHorizontal } from 'lucide-react'
-import { useSelector } from 'react-redux'
+import { Edit2, MoreHorizontal, Trash2 } from 'lucide-react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { setCompanies } from '@/redux/companySlice'
+import axios from 'axios'
+import { COMPANY_API_ENDPOINT } from '@/utils/constant'
+import { toast } from 'sonner'
 
 function CompaniesTable() {
   const {companies,searchCompanyByText} = useSelector(store=> store.company);
   const [filterCompanies,setFilterCompanies] = useState(companies);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const deleteCompanyHandler = async (id) => {
+    try {
+      const res = await axios.delete(`${COMPANY_API_ENDPOINT}/delete/${id}`, { withCredentials: true });
+      if (res.data.success) {
+        const updatedCompanies = companies.filter((company) => company._id !== id);
+        dispatch(setCompanies(updatedCompanies));
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  }
+
   useEffect(() => {
   const isSubsequence = (text, target) => {
     let i = 0, j = 0;
@@ -64,10 +83,14 @@ function CompaniesTable() {
                         <PopoverTrigger>
                           <MoreHorizontal />
                         </PopoverTrigger>
-                        <PopoverContent className='w-20'>
+                        <PopoverContent className='w-32'>
                           <div onClick={()=> navigate(`/admin/companies/${company._id}`)} className='flex items-center gap-2 w-fit cursor-pointer'>
                             <Edit2 className='w-4'/>
                             <span>Edit</span>
+                          </div>
+                          <div onClick={() => deleteCompanyHandler(company._id)} className='flex items-center gap-2 w-fit cursor-pointer mt-2'>
+                            <Trash2 className='w-4'/>
+                            <span>Delete</span>
                           </div>
                         </PopoverContent>
                       </Popover>
