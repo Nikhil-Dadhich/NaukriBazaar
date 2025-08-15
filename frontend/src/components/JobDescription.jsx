@@ -8,23 +8,6 @@ import { setSingleJob } from "@/redux/jobSlice";
 import { APPLICATION_API_ENDPOINT, JOB_API_ENDPOINT } from "@/utils/constant";
 import { toast } from "sonner";
 
-// const singleJob = {
-//   title: "Frontend Developer",
-//   postion: 3,
-//   jobType: "Full Time",
-//   salary: 12,
-//   location: "Bengaluru, India",
-//   description: "We're looking for a passionate frontend developer with strong React skills.",
-//   experience: 2,
-//   applications: [
-//     { id: 1, name: "John Doe" },
-//     { id: 2, name: "Jane Smith" },
-//   ],
-//   createdAt: "2025-07-06T12:00:00Z",
-// };
-
-// const isApplied = false;
-
 function JobDescription() {
   const { singleJob } = useSelector((state) => state.job);
   const { user } = useSelector((store) => store.auth);

@@ -7,6 +7,7 @@ import Footer from './shared/Footer';
 import useGetAllJobs from '@/hooks/useGetAllJobs';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { setSearchedQuery } from '@/redux/jobSlice';
 
 function Home() {
   const dispatch = useDispatch();
@@ -14,10 +15,15 @@ function Home() {
   const { user } = useSelector(state => state.auth);
   const navigate = useNavigate();
 
+  // Reset search query on page load
   useEffect(() => {
-  if (user?.role === 'recruiter') {
-    navigate('/admin/companies'); 
-  }
+    dispatch(setSearchedQuery(''));
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (user?.role === 'recruiter') {
+      navigate('/admin/companies'); 
+    }
   }, [navigate, user?.role]);
 
   return (
