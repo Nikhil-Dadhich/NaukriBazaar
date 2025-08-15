@@ -6,6 +6,8 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import userRoute from './routes/user.routes.js';
 import companyRoute from './routes/company.route.js';
+import jobRoute from './routes/job.route.js';
+import applicationRoute from './routes/application.route.js';
 
 const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI;
@@ -25,6 +27,8 @@ app.use(cors(corsOptions));
 // api's
 app.use('/api/v1/user', userRoute);
 app.use('/api/v1/company', companyRoute);
+app.use('/api/v1/job', jobRoute);
+app.use('/api/v1/application', applicationRoute);
 
 mongoose
 .connect(MONGO_URI)
