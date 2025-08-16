@@ -86,7 +86,7 @@ function JobDescription() {
               {singleJob?.jobType}
             </Badge>
             <Badge className="bg-purple-100 text-purple-700 font-medium px-3 py-1 rounded-full">
-              ₹{singleJob?.salary} LPA
+              ₹{singleJob?.salary}
             </Badge>
           </div>
         </div>
@@ -138,7 +138,7 @@ function JobDescription() {
         </div>
         <div className="flex flex-col sm:flex-row">
           <strong className="w-40">Salary:</strong>
-          <span>₹{singleJob?.salary} LPA</span>
+          <span>₹{singleJob?.salary} per Annum</span>
         </div>
         <div className="flex flex-col sm:flex-row">
           <strong className="w-40">Total Applicants:</strong>
