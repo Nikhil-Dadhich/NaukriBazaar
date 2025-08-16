@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 const corsOptions = {
-  origin: 'https://naukri-bazaar-t97x.vercel.app',
+  origin: 'https://naukribazaar.vercel.app',
   credentials: true,
 };
 
