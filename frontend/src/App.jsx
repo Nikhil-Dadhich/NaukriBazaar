@@ -13,6 +13,9 @@ import AdminJobs from "./components/admin/AdminJobs";
 import PostJob from "./components/admin/PostJob";
 import Applicants from "./components/admin/Applicants";
 import ProtectedRoute from "./components/admin/ProtectedRoute";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { clearUser } from "./redux/authSlice";
 
 const appRouter = createBrowserRouter([
   {
@@ -75,11 +78,26 @@ const appRouter = createBrowserRouter([
   }
 ]);
 
+const AuthChecker = ({ children }) => {
+  const { expiresAt } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (expiresAt && new Date().getTime() > expiresAt) {
+      dispatch(clearUser());
+    }
+  }, [expiresAt, dispatch]);
+
+  return children;
+};
+
 
 function App() {
   return (
     <>
-      <RouterProvider router={appRouter}/>
+      <AuthChecker>
+        <RouterProvider router={appRouter}/>
+      </AuthChecker>
     </>
   )
 }
